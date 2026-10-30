@@ -1,0 +1,58 @@
+-- Step 1: Purani table drop karein (agar pehle se bani ho)
+DROP TABLE Inventory;
+
+-- Step 2: Inventory table create karein
+CREATE TABLE Inventory (
+    Product_ID   NUMBER PRIMARY KEY,
+    Product_Name VARCHAR2(50),
+    Quantity     NUMBER
+);
+
+-- Step 3: Sample data insert karein
+INSERT INTO Inventory VALUES (101, 'Keyboard', 25);
+INSERT INTO Inventory VALUES (102, 'Mouse', 8);
+INSERT INTO Inventory VALUES (103, 'Monitor', 5);
+INSERT INTO Inventory VALUES (104, 'Printer', 15);
+
+COMMIT;
+
+-- Step 4: Output console enable karein
+SET SERVEROUTPUT ON;
+
+-- Step 5: Explicit Cursor PL/SQL Program
+DECLARE
+    -- 1. Declare Cursor
+    CURSOR c_low_stock IS
+        SELECT Product_ID, Product_Name, Quantity
+        FROM Inventory
+        WHERE Quantity < 10;
+
+    -- Record variable row hold karne ke liye
+    v_item c_low_stock%ROWTYPE;
+
+BEGIN
+    -- 2. Open Cursor
+    OPEN c_low_stock;
+
+    DBMS_OUTPUT.PUT_LINE('--------------------------------');
+    DBMS_OUTPUT.PUT_LINE('    LOW STOCK PRODUCT REPORT    ');
+    DBMS_OUTPUT.PUT_LINE('--------------------------------');
+
+    LOOP
+        -- 3. Fetch Data
+        FETCH c_low_stock INTO v_item;
+        EXIT WHEN c_low_stock%NOTFOUND;
+
+        DBMS_OUTPUT.PUT_LINE(
+            'ID: ' || v_item.Product_ID || 
+            ' | Name: ' || v_item.Product_Name || 
+            ' | Qty: ' || v_item.Quantity
+        );
+    END LOOP;
+
+    -- 4. Close Cursor
+    CLOSE c_low_stock;
+
+    DBMS_OUTPUT.PUT_LINE('--------------------------------');
+END;
+/

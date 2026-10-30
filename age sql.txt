@@ -1,0 +1,38 @@
+-- Step 1: Table create karein (phone_number as PRIMARY KEY)
+CREATE TABLE student_info (
+    phone_number NUMBER(10) PRIMARY KEY,
+    student_name VARCHAR2(100) NOT NULL,
+    city_name    VARCHAR2(50),
+    student_age  NUMBER(3)
+);
+
+-- Step 2: Output console on karein
+SET SERVEROUTPUT ON;
+
+-- Step 3: PL/SQL Block execute karein
+DECLARE
+    v_phone student_info.phone_number%TYPE := 9876543210;
+    v_name  student_info.student_name%TYPE := 'Jass Preet';
+    v_city  student_info.city_name%TYPE := 'Chandigarh';
+    v_age   student_info.student_age%TYPE := 17;
+
+    c_limit CONSTANT NUMBER := 18;
+
+BEGIN
+    IF v_age >= c_limit THEN
+        INSERT INTO student_info (phone_number, student_name, city_name, student_age)
+        VALUES (v_phone, v_name, v_city, v_age);
+
+        DBMS_OUTPUT.PUT_LINE(
+            'Voting status: ELIGIBLE. Student record saved.'
+        );
+    ELSE
+        DBMS_OUTPUT.PUT_LINE(
+            'Voting status: NOT ELIGIBLE. Minimum age is 18.'
+        );
+    END IF;
+
+    COMMIT;
+END;
+/
+SELECT * FROM student_info;
